@@ -1,0 +1,26 @@
+.Container {
+    width: 380px;
+    height: 280px;
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(245, 245, 245);
+    padding: 50px;
+    padding-top: 10px;
+    border: 1px solid rgb(173, 173, 173);
+    border-radius: 5px;
+    box-shadow: 1px 1px 10px 1px rgb(172, 172, 172);
+}
+
+.Heading {
+    text-align: center;
+    font-weight: bold;
+}
+
+.TextFieldDiv {
+    margin-bottom: 20px;
+    .TextField {
+        background-color: rgb(224, 224, 224);
+    }
+}

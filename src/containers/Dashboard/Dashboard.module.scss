@@ -1,0 +1,12 @@
+$padding-x: 20px;
+
+.Container {
+    background-color: azure;
+    padding-top: 10px;
+    padding-left: $padding-x;
+    padding-right: $padding-x;
+    .TableDiv {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}

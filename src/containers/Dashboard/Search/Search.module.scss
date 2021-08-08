@@ -1,0 +1,27 @@
+.Container {
+    margin-bottom: 5px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 400px auto;
+    grid-column-gap: 5px;
+    .FormControl {
+        background-color: white;
+    }
+
+    .AutoCompleteDiv {
+        .TextField {
+            width: 400px;
+            background-color: white;
+        }
+    }
+
+    .SearchButtonDiv {
+        .SearchButton {
+            height: 100%;
+        }
+    }
+
+    &>div {
+        margin: 5px;
+    }
+}

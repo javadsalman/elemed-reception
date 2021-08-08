@@ -1,25 +1,39 @@
-import logo from './logo.svg';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
+import Layout from './HOC/Layout/Layout';
+import Login from './containers/auth/Login/Login';
+import { useMemo, Fragment } from 'react';
+import Dashboard from './containers/Dashboard/Dashboard';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    const isAuth = true;
+
+    const routes = useMemo(() => {
+        if (isAuth) {
+            return (
+                <Fragment>
+                    <Route path="/dashboard" component={Dashboard} />
+                    <Redirect to="/dashboard" />
+                </Fragment>
+            )
+        }
+        else {
+            return (
+                <Fragment>
+                    <Route path="/" component={Login} />
+                </Fragment>
+            )
+        }
+    }, [isAuth]);
+
+    return (
+        <Layout>
+            <Switch>
+                {routes}
+            </Switch>
+        </Layout>
+    );
 }
 
 export default App;
