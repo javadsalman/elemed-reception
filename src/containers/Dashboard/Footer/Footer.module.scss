@@ -1,0 +1,26 @@
+.Container {
+    margin-top: 5px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    
+
+    .Empty {
+        flex-grow: 1;
+    }
+
+    .ButtonGroupDiv {
+        .ButtonNumber {
+            margin-left: 5px;
+            line-height: 5px;
+        }
+    }
+
+    .PaginationDiv {
+        background-color: rgb(255, 255, 255);
+        border-radius: 10px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border: 1px solid rgb(201, 201, 201);
+    }
+}

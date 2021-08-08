@@ -4,8 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import { Cached, CheckBox, ExitToApp } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,7 +28,9 @@ function ButtonAppBar() {
                     <Typography variant="h6" className={classes.title}>
                         ELMED RANDEVU
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    <Button color="inherit"><Cached /></Button>
+                    <Button color="inherit"><CheckBox /></Button>
+                    <Button color="inherit"><ExitToApp /></Button>
                 </Toolbar>
             </AppBar>
         </div>
