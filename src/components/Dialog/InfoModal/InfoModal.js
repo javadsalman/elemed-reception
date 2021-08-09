@@ -1,6 +1,7 @@
 import Modal from "../../UI/Modal/Modal";
 import classes from './InfoModal.module.scss';
 import { useMemo, useState } from 'react';
+import ContentSpinner from './../../UI/Spinners/ContentSpinner/ContentSpinner';
 
 const modalButtons = [
     {
@@ -34,20 +35,26 @@ const keyEq = {
 }
 
 function InfoModal(props) {
-    const [ openModal, setOpenModal ] = useState(true);
+    const [ openModal, setOpenModal ] = useState(false);
+    const [ loading, setLoading ] = useState(false);
 
     const content = useMemo(()=>{
-        const result = [];
-        for (let key in contentInfo) {
-            result.push(
-                <div className={classes.InfoCol}>
-                    <h3 className={classes.InfoHead}>{keyEq[key]}</h3>
-                    <p className={classes.InfoBody}>{contentInfo[key]}</p>
-                </div>
-            )
+        if (!loading) {
+            const result = [];
+            for (let key in contentInfo) {
+                result.push(
+                    <div className={classes.InfoCol}>
+                        <h3 className={classes.InfoHead}>{keyEq[key]}</h3>
+                        <p className={classes.InfoBody}>{contentInfo[key]}</p>
+                    </div>
+                )
+            }
+            return result;
         }
-        return result;
-    }, [props]);
+        else {
+            return null
+        }
+    }, [loading]);
 
     return openModal 
         ? (
@@ -56,6 +63,7 @@ function InfoModal(props) {
                 dispatch={()=>{}}
                 onClose={()=>setOpenModal(false)}
                 buttons={modalButtons}>
+                    { loading && <ContentSpinner />}
                     <div className={classes.Container}>
                         {content}
                     </div>

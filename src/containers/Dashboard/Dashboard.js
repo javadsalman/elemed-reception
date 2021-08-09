@@ -2,14 +2,19 @@ import classes from './Dashboard.module.scss';
 import Table from './../../components/Table/Table';
 import Search from './Search/Search';
 import Footer from './Footer/Footer';
-import { Component, useMemo, useState } from 'react';
+import { Component } from 'react';
 import InfoModal from './../../components/Dialog/InfoModal/InfoModal';
+import SelectOptions from './SelectOptions/SelectOptions';
+import Modal from '../../components/UI/Modal/Modal';
+import PageSpinner from './../../components/UI/Spinners/PageSpinner/PageSpinner';
 
 
 
 class Dashboard extends Component {
     state = {
-        openModal: true
+        openModal: false,
+        warningMessage: null,
+        loading: false
     }
 
 
@@ -21,11 +26,33 @@ class Dashboard extends Component {
     }
 
     render() {
+
+        let warningModal = null;
+        if (this.state.warningMessage) {
+            warningModal = <Modal
+                title="Bildiriş"
+                buttons={[{name: 'Bəli', color: 'white', backgroundColor: 'red', actionType: 'accepted'}]}
+                onClose={()=>{}}
+                dispatch={()=>{}}>
+                    <p className={classes.WarningMessage}>{this.state.warningMessage}</p>
+            </Modal>
+        }
+
+        let loading = null;
+        if (this.state.loading) {
+            loading = <PageSpinner />
+        }
+
         return (
             <div className={classes.Container}>
+                {loading}
+                {warningModal}
                 <InfoModal />
-                <div className={classes.SearchDiv}>
+                {/* <div className={classes.SearchDiv}>
                     <Search />
+                </div> */}
+                <div className={classes.SelectOptionsDiv}>
+                    <SelectOptions />
                 </div>
                 <div className={classes.TableDiv}>
                     <Table />

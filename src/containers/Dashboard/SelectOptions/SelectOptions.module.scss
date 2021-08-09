@@ -1,0 +1,38 @@
+@mixin leftButtonDiv {
+    margin-right: 15px;
+}
+@mixin rightButtonDiv {
+    margin-left: 15px;
+}
+
+.Container {
+    height: 66px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+
+    .SelectAllDiv {
+        @include leftButtonDiv();
+    }
+
+    .ExitDiv {
+        @include leftButtonDiv();
+
+    }
+
+    .Empty {
+        flex-grow: 1;
+    }
+
+    .DeleteDiv {
+        @include rightButtonDiv();
+    }
+    .SeenDiv {
+        @include rightButtonDiv();
+    }
+    .UnSeenDiv {
+        @include rightButtonDiv();
+    }
+}

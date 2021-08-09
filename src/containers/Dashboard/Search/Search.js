@@ -27,6 +27,7 @@ function Search(props) {
                 <Autocomplete
                     id="combo-box-demo"
                     options={top100Films}
+                    freeSolo
                     getOptionLabel={(option) => option.title}
                     style={{ width: 300 }}
                     renderInput={
