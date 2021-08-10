@@ -8,6 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { Checkbox } from '@material-ui/core';
 import classes from './Table.module.scss';
+import { connect } from 'react-redux';
 
 
 
@@ -24,7 +25,7 @@ const rows = [
     createData('Fəhmin Şamilli', 'Stomotologiya', 'Rəşad Əlivev', '0913544356', '25.08.2021'),
 ];
 
-function BasicTable() {
+function BasicTable(props) {
 
     return (
         <TableContainer component={Paper}>
@@ -36,7 +37,13 @@ function BasicTable() {
                         <TableCell>Həkim</TableCell>
                         <TableCell>Nömrə</TableCell>
                         <TableCell>Tarix</TableCell>
-                        <TableCell>Seç</TableCell>
+                        {
+                            props.selecting
+                            ?
+                                <TableCell>Seç</TableCell>
+                            :
+                            null
+                        }
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -47,17 +54,25 @@ function BasicTable() {
                             <TableCell>{row.fat}</TableCell>
                             <TableCell>{row.carbs}</TableCell>
                             <TableCell>{row.protein}</TableCell>
-                            <TableCell className={classes.CheckboxCol}>
-                                <Checkbox
-                                    checked={true}
-                                    onChange={()=>{}}
-                                    color="primary"
-                                    inputProps={{ 'aria-label': 'secondary checkbox' }}
-                                    classes={{
-                                        root: classes.CheckBox
-                                    }}
-                                />
-                            </TableCell>
+                            {
+                                props.selecting
+                                ?
+                                (
+                                    <TableCell className={classes.CheckboxCol}>
+                                        <Checkbox
+                                            checked={true}
+                                            onChange={()=>{}}
+                                            color="primary"
+                                            inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                            classes={{
+                                                root: classes.CheckBox
+                                            }}
+                                        />
+                                    </TableCell>
+                                )
+                                :
+                                null
+                            }
                         </TableRow>
                     ))}
                 </TableBody>
@@ -66,4 +81,10 @@ function BasicTable() {
     );
 }
 
-export default BasicTable;
+function mapStateToProps(state) {
+    return {
+        selecting: state.appointment.selecting,
+    }
+}
+
+export default connect(mapStateToProps)(BasicTable);

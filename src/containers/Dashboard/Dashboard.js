@@ -7,6 +7,7 @@ import InfoModal from './../../components/Dialog/InfoModal/InfoModal';
 import SelectOptions from './SelectOptions/SelectOptions';
 import Modal from '../../components/UI/Modal/Modal';
 import PageSpinner from './../../components/UI/Spinners/PageSpinner/PageSpinner';
+import { connect } from 'react-redux';
 
 
 
@@ -14,7 +15,7 @@ class Dashboard extends Component {
     state = {
         openModal: false,
         warningMessage: null,
-        loading: false
+        loading: false,
     }
 
 
@@ -48,12 +49,17 @@ class Dashboard extends Component {
                 {loading}
                 {warningModal}
                 <InfoModal />
-                {/* <div className={classes.SearchDiv}>
-                    <Search />
-                </div> */}
-                <div className={classes.SelectOptionsDiv}>
-                    <SelectOptions />
-                </div>
+                {
+                    this.props.selecting
+                    ?
+                    <div className={classes.SelectOptionsDiv}>
+                        <SelectOptions />
+                    </div>
+                    :
+                    <div className={classes.SearchDiv}>
+                        <Search />
+                    </div>
+                }
                 <div className={classes.TableDiv}>
                     <Table />
                 </div>
@@ -66,4 +72,10 @@ class Dashboard extends Component {
    
 }
 
-export default Dashboard;
+function mapStateToProps(state) {
+    return {
+        selecting: state.appointment.selecting,
+    }
+}
+
+export default connect(mapStateToProps)(Dashboard);
