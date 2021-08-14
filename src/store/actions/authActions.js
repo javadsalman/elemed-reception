@@ -10,14 +10,14 @@ export function login(username, password) {
             password: password
         })
         .then(response => {
-            console.log(response)
+            console.log('response', response)
             localStorage.setItem('token', response.data.token)
             iaxios.defaults.headers.common['Authorization'] = `Token ${response.data.token}`
             dispatch({type: AUTH_SUCCESS, token: response.data.token});
         })
         .catch(error => {
-            console.log(error.response)
             let errorMessage;
+            console.log(error.response)
             switch(error.response.status) {
                 case 400:
                     errorMessage = 'İstifadəçi adı və ya şifrə yanlışdır!';
@@ -33,28 +33,26 @@ export function login(username, password) {
 
 export function logout() {
     return dispatch => {
-        iaxios.post('logout/')
-        .then(response => {
-            localStorage.removeItem('token');
-            delete iaxios.defaults.headers.common['Authorization'];
-            dispatch({type: AUTH_LOGOUT});
-        })
-        .catch(error => {
-            console.log(error.response)
-        })
+        localStorage.removeItem('token');
+        dispatch({type: AUTH_LOGOUT});
+        iaxios.post('logout/');
+        delete iaxios.defaults.headers.common['Authorization'];
     }
 };
 
 export function checkAuth() {
     return dispatch => {
-        dispatch({type: AUTH_START})
-        const token = localStorage.getItem('token');
-        if (token) {
-            iaxios.defaults.headers.common['Authorization'] = `Token ${token}`
-            dispatch({type: AUTH_SUCCESS, token: token});
-        }
-        else {
-            dispatch({type: AUTH_SUCCESS, token: null});
+        if (window.navigator.onLine) {
+            dispatch({type: AUTH_START})
+            const token = localStorage.getItem('token');
+            if (token) {
+                iaxios.defaults.headers.common['Authorization'] = `Token ${token}`
+                dispatch({type: AUTH_SUCCESS, token: token});
+            }
+            else {
+                // to stop loading and define token doesn't exist (ass null instead of false) to redirect login page
+                dispatch({type: AUTH_SUCCESS, token: null}); 
+            }
         }
     }
 };

@@ -8,17 +8,17 @@ import SelectOptions from './SelectOptions/SelectOptions';
 import Modal from '../../components/UI/Modal/Modal';
 import PageSpinner from './../../components/UI/Spinners/PageSpinner/PageSpinner';
 import { connect } from 'react-redux';
+import { clearError, loadData } from './../../store/actions/appointmentActions';
+import { Route } from 'react-router-dom';
 
 
 
 class Dashboard extends Component {
-    state = {
-        openModal: false,
-        warningMessage: null,
-        loading: false,
+
+    componentDidMount() {
+        this.props.onLoadData();
     }
-
-
+    
     openModalHandler = () => {
         this.setState({openModal: true})
     }
@@ -29,26 +29,26 @@ class Dashboard extends Component {
     render() {
 
         let warningModal = null;
-        if (this.state.warningMessage) {
+        if (this.props.error) {
             warningModal = <Modal
                 title="Bildiriş"
-                buttons={[{name: 'Bəli', color: 'white', backgroundColor: 'red', actionType: 'accepted'}]}
-                onClose={()=>{}}
+                // buttons={[{name: 'Bəli', color: 'white', backgroundColor: 'red', actionType: 'accepted'}]}
+                buttons={[]}
+                onClose={this.props.onClearError}
                 dispatch={()=>{}}>
-                    <p className={classes.WarningMessage}>{this.state.warningMessage}</p>
+                    <p className={classes.WarningMessage}>{this.props.error}</p>
             </Modal>
         }
 
         let loading = null;
-        if (this.state.loading) {
+        if (this.props.loading) {
             loading = <PageSpinner />
         }
-
         return (
             <div className={classes.Container}>
                 {loading}
                 {warningModal}
-                <InfoModal />
+                <Route path="/dashboard/:id" component={InfoModal}/>
                 {
                     this.props.selecting
                     ?
@@ -75,7 +75,16 @@ class Dashboard extends Component {
 function mapStateToProps(state) {
     return {
         selecting: state.appointment.selecting,
+        loading: state.appointment.loading,
+        error: state.appointment.error,
     }
 }
 
-export default connect(mapStateToProps)(Dashboard);
+function mapDispatchToProps(dispatch) {
+    return {
+        onClearError: () => dispatch(clearError()),
+        onLoadData: () => dispatch(loadData()),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

@@ -1,6 +1,8 @@
 import { Button, TextField, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import classes from './Search.module.scss';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { changeSearchType, } from './../../../store/actions/appointmentActions';
+import { connect } from 'react-redux';
 
 function Search(props) {
 
@@ -11,16 +13,13 @@ function Search(props) {
                 <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    value={10}
-                    // onChange={()=>()}
+                    value={props.searchType}
+                    onChange={(event)=>(props.onChangeSearchType(event.target.value))}
                     label="Age"
                 >
-                    {/* <MenuItem value="">
-                        <em>None</em>
-                    </MenuItem> */}
-                    <MenuItem value={10}>Xəstə</MenuItem>
-                    <MenuItem value={20}>Şöbə</MenuItem>
-                    <MenuItem value={30}>Həkim</MenuItem>
+                    <MenuItem value={'name'}>Xəstə</MenuItem>
+                    <MenuItem value={'departament'}>Şöbə</MenuItem>
+                    <MenuItem value={'doctor'}>Həkim</MenuItem>
                 </Select>
             </FormControl>
             <div className={classes.AutoCompleteDiv}>
@@ -31,8 +30,8 @@ function Search(props) {
                     getOptionLabel={(option) => option.title}
                     style={{ width: 300 }}
                     renderInput={
-                        (params) => <TextField 
-                            {...params} 
+                        (params) => <TextField
+                            {...params}
                             label="Açar Söz"
                             className={classes.TextField}
                             variant="outlined" />
@@ -54,7 +53,20 @@ function Search(props) {
     )
 }
 
-export default Search;
+function mapStateToProps(state) {
+    return {
+        searchType: state.appointment.searchType,
+    };
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        onChangeSearchType: (searchType) => dispatch(changeSearchType(searchType)),
+    };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Search);
 
 
 const top100Films = [

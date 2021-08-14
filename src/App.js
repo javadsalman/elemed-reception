@@ -10,7 +10,14 @@ import { checkAuth } from './store/actions/authActions';
 function App(props) {
 
     const routes = useMemo(() => {
-        if (props.token) {
+        // I add this section to detect the network connection is exist or not
+        if (!window.navigator.onLine) {
+            return <h1 
+                style={{textAlign: 'center', lineHeight: 10}}>
+                İnternet əlaqəsi mövcud deyil!
+            </h1>
+        }
+        else if (props.token) {
             return (
                 <Fragment>
                     <Route path="/dashboard" component={Dashboard} />

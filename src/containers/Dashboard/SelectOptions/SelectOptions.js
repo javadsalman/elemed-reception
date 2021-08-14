@@ -1,5 +1,7 @@
 import { Button } from '@material-ui/core';
 import classes from './SelectOptions.module.scss';
+import { selectToggle } from './../../../store/actions/appointmentActions';
+import { connect } from 'react-redux';
 
 function SelectOptions(props) {
 
@@ -18,6 +20,7 @@ function SelectOptions(props) {
                 <Button
                     color="default"
                     variant="outlined"
+                    onClick={props.onSelectToggle}
                     size="large">
                     Çıx
                 </Button>
@@ -51,4 +54,10 @@ function SelectOptions(props) {
     )
 }
 
-export default SelectOptions;
+function mapDispatchToProps(dispatch) {
+    return {
+        onSelectToggle: () => dispatch(selectToggle()),
+    };
+}
+
+export default connect(null, mapDispatchToProps)(SelectOptions);

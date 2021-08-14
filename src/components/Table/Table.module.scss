@@ -6,4 +6,25 @@
         left: 50%;
         transform: translate(-50%, -50%);
     }
+
+}
+
+.TableHead {
+    background-color: rgb(106, 133, 255);
+    .HeadCell {
+        color: white;
+        font-size: 17px;
+        font-weight: bold;
+    }
+}
+
+.Selected {
+    background-color: rgb(225, 238, 255);
+}
+.Row {
+    cursor: pointer;
+}
+
+.Seen {
+    background-color: rgb(225, 238, 255);
 }

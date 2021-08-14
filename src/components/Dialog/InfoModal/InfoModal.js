@@ -1,32 +1,16 @@
 import Modal from "../../UI/Modal/Modal";
 import classes from './InfoModal.module.scss';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import ContentSpinner from './../../UI/Spinners/ContentSpinner/ContentSpinner';
+import iaxios from './../../../iaxios';
+import { makeSeen } from "../../../store/actions/appointmentActions";
+import { connect } from 'react-redux';
 
-const modalButtons = [
-    {
-        name: 'Sil',
-        color: 'white',
-        backgroundColor: 'red',
-        actionType: 'delete'
-    }
-]
-
-const contentInfo = {
-    name: 'Fazil Əmirli',
-    doctor: 'Rustem Hesenli',
-    departament: 'Kosmetologiya',
-    phone: '516764390',
-    email: 'fazil@gmail.com',
-    date: '09.08.2021',
-    time: '15:00',
-    note: 'Uzun muddetdi basimda kecellik hiss edirem'
-}
 
 const keyEq = {
     name: 'Xəstə Adı',
-    doctor: 'Həkim Adı',
-    departament: 'Şöbə Adı',
+    doctor_name: 'Həkim Adı',
+    departament_name: 'Şöbə Adı',
     phone: 'Telefon Nörməsi',
     email: 'Email Ünvanı',
     date: 'Müraciət tarixi',
@@ -35,40 +19,103 @@ const keyEq = {
 }
 
 function InfoModal(props) {
-    const [ openModal, setOpenModal ] = useState(false);
-    const [ loading, setLoading ] = useState(false);
-
-    const content = useMemo(()=>{
-        if (!loading) {
+    const [loading, setLoading] = useState(false);
+    const [deleteAlert, setDeleteAlert] = useState(null);
+    const [contentInfo, setContentInfo] = useState([]);
+    
+    const content = useMemo(() => {
+        if (loading) {
+            return <ContentSpinner />
+        }
+        else if (!deleteAlert) {
             const result = [];
-            for (let key in contentInfo) {
+            for (let key in keyEq) {
                 result.push(
-                    <div className={classes.InfoCol}>
+                    <div className={classes.InfoCol} key={key}>
                         <h3 className={classes.InfoHead}>{keyEq[key]}</h3>
                         <p className={classes.InfoBody}>{contentInfo[key]}</p>
                     </div>
                 )
             }
-            return result;
+            return (
+                <div className={classes.Container}>{result}</div>
+            );
+        }
+        else if (deleteAlert) {
+            return <p style={{fontSize: 22}}>{deleteAlert}</p>
         }
         else {
             return null
         }
-    }, [loading]);
+    }, [loading, contentInfo, deleteAlert]);
 
-    return openModal 
-        ? (
+    const modalButtons = useMemo(()=>{
+        if (deleteAlert) {
+            return [
+                {
+                    name: 'Bəli',
+                    color: 'white',
+                    backgroundColor: 'red',
+                    actionType: 'deleteAccepted'
+                }
+            ]
+        }
+        else {
+            return [
+                {
+                    name: 'Sil',
+                    color: 'white',
+                    backgroundColor: 'red',
+                    actionType: 'delete'
+                }
+            ]
+        }
+    }, [deleteAlert]);
+
+    const dispatchHandler = useCallback((actionType)=>{
+        switch(actionType) {
+            case 'delete':
+                setDeleteAlert('Məlumatı silmək istədiyinizə əminsizmi?');
+                break;
+            case 'deleteAccepted':
+                break;
+            default:
+                break;
+        }
+    }, [])
+
+    useEffect(() => {
+        setLoading(true);
+        iaxios.get(`appointment-list/${props.match.params.id}/`)
+        .then(response => {
+            setContentInfo({...response.data});
+            setLoading(false);
+            props.onMakeSeen(parseInt(props.match.params.id));
+        })
+        // .catch(error => {
+        //     setLoading(false);
+        // });
+    }, [props.match.params.id])
+
+    const closeHandler = useCallback(() => {
+        props.history.push("/dashboard")
+    }, [props]);
+
+    return (
         <Modal
-                title="Xəstə Məlumatı"
-                dispatch={()=>{}}
-                onClose={()=>setOpenModal(false)}
-                buttons={modalButtons}>
-                    { loading && <ContentSpinner />}
-                    <div className={classes.Container}>
-                        {content}
-                    </div>
+            title="Xəstə Məlumatı"
+            dispatch={dispatchHandler}
+            onClose={closeHandler}
+            buttons={modalButtons}>
+                {content}
         </Modal>
-    ) : null;
+    )
 }
 
-export default InfoModal;
+function mapDispatchToProps(dispatch) {
+    return {
+        onMakeSeen: (id) => dispatch(makeSeen(id)),
+    };
+}
+
+export default connect(null, mapDispatchToProps)(InfoModal);
