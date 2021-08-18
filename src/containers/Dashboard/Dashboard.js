@@ -50,7 +50,7 @@ class Dashboard extends Component {
                 {warningModal}
                 <Route path="/dashboard/:id" component={InfoModal}/>
                 {
-                    this.props.selecting
+                    this.props.selectMode
                     ?
                     <div className={classes.SelectOptionsDiv}>
                         <SelectOptions />
@@ -74,7 +74,7 @@ class Dashboard extends Component {
 
 function mapStateToProps(state) {
     return {
-        selecting: state.appointment.selecting,
+        selectMode: state.appointment.selectMode,
         loading: state.appointment.loading,
         error: state.appointment.error,
     }

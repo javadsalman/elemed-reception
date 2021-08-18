@@ -9,7 +9,10 @@ import {
     SET_ERROR,
     CLEAR_ERROR,
     LOAD_DATA,
-    MAKE_SEEN
+    MAKE_SEEN,
+    TOGGLE_SELECT_ID,
+    TOGGLE_SELECT_ALL,
+    CLEAR_ID_SET,
 } from './actionTypes';
 
 export function selectToggle() {
@@ -56,7 +59,6 @@ export function loadData() {
         iaxios.get('appointment-list/', {params: paramData})
             .then(response => {
                 const data = response.data;
-                console.log(data);
                 const loadedData = {
                     seenInfo: {
                         all: data.seenCount + data.unseenCount, 
@@ -102,7 +104,42 @@ export function makeSeen(id) {
     return {
         type: MAKE_SEEN,
         id,
+    };
+};
+
+export function toggleSelectId(id) {
+    return {
+        type: TOGGLE_SELECT_ID,
+        id
+    };
+};
+
+export function toggleSelectAll() {
+    return {
+        type: TOGGLE_SELECT_ALL,
+    };
+};
+
+export function clearIdSet() {
+    return {
+        type: CLEAR_ID_SET,
+    };
+};
+
+export function editSelectedRows(editType) {
+    return (dispatch, getState) => {
+        const selectedIdSet = getState().appointment.selectedIdSet
+        dispatch(startLoading());
+        iaxios.put('appointment-list/edit/', {editType: editType, idList: [...selectedIdSet]})
+            .then(response => {
+                console.log(response);
+                dispatch(clearIdSet());
+                dispatch(loadData());
+            })
+            .catch(error => {
+                console.log(error.response);
+                dispatch(stopLoading());
+            });
     }
 }
-
 

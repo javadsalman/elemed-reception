@@ -68,7 +68,7 @@ function ButtonAppBar(props) {
                                     <Button
                                         color="inherit"
                                         onClick={props.onSelectToggle}>
-                                        {props.selecting ? <IndeterminateCheckBox /> : <CheckBox />}
+                                        {props.selectMode ? <IndeterminateCheckBox /> : <CheckBox />}
                                     </Button>
                                     <Button
                                         color="inherit"
@@ -89,7 +89,7 @@ function ButtonAppBar(props) {
 function mapStateToProps(state) {
     return {
         isAuth: Boolean(state.auth.token),
-        selecting: state.appointment.selecting,
+        selectMode: state.appointment.selectMode,
     }
 }
 

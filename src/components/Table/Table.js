@@ -10,6 +10,7 @@ import { Checkbox } from '@material-ui/core';
 import classes from './Table.module.scss';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { toggleSelectAll, toggleSelectId } from './../../store/actions/appointmentActions';
 
 
 
@@ -28,9 +29,16 @@ import { useHistory } from 'react-router-dom';
 
 function BasicTable(props) {
     const history = useHistory(null);
-    const linkHandler = useCallback((id) => {
-        history.push(`/dashboard/${id}`);
-    }, [history]);
+
+    const rowClickHandler = useCallback((id) => {
+        if (props.selectMode) {
+            props.onToggleSelectId(id);
+        }
+        else {
+            history.push(`/dashboard/${id}`);
+        }
+    }, [history, props.onToggleSelectId, props.selectMode]);
+
     // console.log('indexi burada bele tapdim', props.infoList.findIndex(info=>info.id===21))
     return (
         <TableContainer component={Paper}>
@@ -43,9 +51,9 @@ function BasicTable(props) {
                         <TableCell classes={{ root: classes.HeadCell }}>Nömrə</TableCell>
                         <TableCell classes={{ root: classes.HeadCell }}>Tarix</TableCell>
                         {
-                            props.selecting
+                            props.selectMode
                                 ?
-                                <TableCell>Seç</TableCell>
+                                <TableCell classes={{ root: classes.HeadCell }}>Seç</TableCell>
                                 :
                                 null
                         }
@@ -57,7 +65,7 @@ function BasicTable(props) {
                             key={row.id}
                             // selected
                             hover
-                            onClick={() => linkHandler(row.id)}
+                            onClick={() => rowClickHandler(row.id)}
                             classes={{
                                 selected: classes.Selected,
                                 root: [classes.Row, row.seen ? classes.Seen : ''].join(' '),
@@ -69,13 +77,13 @@ function BasicTable(props) {
                             <TableCell>{row.phone}</TableCell>
                             <TableCell>{row.date}</TableCell>
                             {
-                                props.selecting
+                                props.selectMode
                                     ?
                                     (
-                                        <TableCell className={classes.CheckboxCol}>
+                                        <TableCell className={classes.CheckboxCol} onClick={() => { }}>
                                             <Checkbox
-                                                checked={true}
-                                                onChange={() => { }}
+                                                checked={props.selectedIdSet.has(row.id)}
+                                                // onChange={() => {checkboxHandler(row.id)}}
                                                 color="primary"
                                                 inputProps={{ 'aria-label': 'secondary checkbox' }}
                                                 classes={{
@@ -97,9 +105,16 @@ function BasicTable(props) {
 
 function mapStateToProps(state) {
     return {
-        selecting: state.appointment.selecting,
+        selectMode: state.appointment.selectMode,
         infoList: state.appointment.infoList,
+        selectedIdSet: state.appointment.selectedIdSet
     }
 }
 
-export default connect(mapStateToProps)(BasicTable);
+function mapDispatchToProps(dispatch) {
+    return {
+        onToggleSelectId: (id) => dispatch(toggleSelectId(id)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BasicTable);

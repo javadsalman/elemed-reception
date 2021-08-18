@@ -9,26 +9,34 @@ import {
     STOP_LOADING, 
     SET_ERROR, 
     CLEAR_ERROR, 
-    MAKE_SEEN
+    MAKE_SEEN,
+    TOGGLE_SELECT_ID,
+    TOGGLE_SELECT_ALL,
+    CLEAR_ID_SET
 } from './../actions/actionTypes';
 
 const initialState = {
     loading: false,
     error: '',
-    selecting: false,
     searchType: 'name',
     searchValue: '',
     seenType: '',
     page: 1,
     totalPage: null,
     infoList: [],
-    selectedInfoList: [],
+    selectMode: false,
+    selectedIdSet: new Set(),
     seenInfo: {all: 0, seen: 0, unseen: 0},
     openedInfo: null,
 };
 
 const selectToggle = (state) => {
-    return { ...state, selecting: !state.selecting };
+    if (state.selectMode) {
+        return { ...state, selectMode: false, selectedIdSet: new Set() };
+    }
+    else {
+        return { ...state, selectMode: true };
+    }
 };
 const changeSeenType = (state, action) => {
     return { ...state, seenType: action.seenType };
@@ -55,9 +63,7 @@ const clearError = (state) => {
     return {...state, error: null};
 };
 const makeSeen = (state, action) => {
-    // console.log(state.infoList, action.id)
     const infoIndex = state.infoList.findIndex(info=>info.id === action.id);
-    // console.log('info index', infoIndex);
     if (state.infoList[infoIndex].seen === false) {
         const newInfo = {...state.infoList[infoIndex], seen: true}
         const newInfoList = state.infoList.map((el, index) => {
@@ -77,6 +83,34 @@ const makeSeen = (state, action) => {
     }
     return state;
 }
+const toggleSelectId = (state, action) => {
+    const newIdSet = new Set(state.selectedIdSet);
+    if (state.selectedIdSet.has(action.id)) {
+        newIdSet.delete(action.id);
+        return {...state, selectedIdSet: newIdSet};
+    }
+    else {
+        newIdSet.add(action.id);
+        return {...state, selectedIdSet: newIdSet};
+    }
+}
+
+const toggleSelectAll = (state) => {
+    const pageIdList = state.infoList.map(info => info.id);
+    const newIdSet = new Set(state.selectedIdSet);
+    if (state.selectedIdSet.size < 6) {
+        pageIdList.forEach(id => newIdSet.add(id))
+        return {...state, selectedIdSet: newIdSet};
+    }
+    else {
+        pageIdList.forEach(id => newIdSet.delete(id))
+        return {...state, selectedIdSet: newIdSet}
+    }
+}
+
+const clearIdSet = (state) => {
+    return {...state, selectedIdSet: new Set()}
+}
 
 function AppointmentReducer(state = initialState, action) {
     switch (action.type) {
@@ -90,6 +124,9 @@ function AppointmentReducer(state = initialState, action) {
         case SET_ERROR: return setError(state, action);
         case CLEAR_ERROR: return clearError(state);
         case MAKE_SEEN: return makeSeen(state, action);
+        case TOGGLE_SELECT_ID: return toggleSelectId(state, action);
+        case TOGGLE_SELECT_ALL: return toggleSelectAll(state);
+        case CLEAR_ID_SET: return clearIdSet(state);
         default: return state;
     }
 }
