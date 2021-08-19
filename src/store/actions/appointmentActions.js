@@ -13,6 +13,7 @@ import {
     TOGGLE_SELECT_ID,
     TOGGLE_SELECT_ALL,
     CLEAR_ID_SET,
+    CHANGE_SEARCH_VALUE,
 } from './actionTypes';
 
 export function selectToggle() {
@@ -46,7 +47,6 @@ export function clearError() {
     };
 };
 
-
 export function loadData() {
     return (dispatch, getState) => {
         const { searchType, searchValue, seenType, page } = getState().appointment;
@@ -67,28 +67,54 @@ export function loadData() {
                     },
                     totalPage: Math.ceil(data.count / 6),
                     infoList: data.results.slice(),
-                    }
+                    };
                 dispatch({ type: LOAD_DATA, loadedData });
                 dispatch(stopLoading());
             })
             .catch(error => {
-                console.log('xetaya girdi', error.response, error);
+                if (error.response.status === 404 && page !== 1) {
+                    dispatch(changePage(1));
+                    dispatch(loadData());
+                }
                 dispatch(stopLoading());
             });
     };
 };
 
+export function deleteInfo(id) {
+    return dispatch => {
+        iaxios.delete(`appointment-list/${id}/`)
+            .then(response => {
+                dispatch(loadData());
+            });
+    };
+};
 
 export function changeSeenType(seenType) {
-    return dispatch => {
-        dispatch({ type: CHANGE_SEEN, seenType });
-        dispatch(loadData());
+    return {
+        type: CHANGE_SEEN,
+        seenType
     };
 };
 
 export function changePage(page) {
+    return {
+        type: CHANGE_PAGE,
+        page
+    };
+};
+
+export function changingSeenType(seenType) {
     return dispatch => {
-        dispatch({ type: CHANGE_PAGE, page });
+        dispatch(changeSeenType(seenType));
+        dispatch(changePage(1));
+        dispatch(loadData());
+    };
+};
+
+export function changingPage(page) {
+    return dispatch => {
+        dispatch(changePage(page));
         dispatch(loadData());
     };
 };
@@ -97,6 +123,13 @@ export function changeSearchType(searchType) {
     return {
         type: CHANGE_SEARCH_TYPE,
         searchType
+    };
+};
+
+export function changeSearchValue(searchValue) {
+    return {
+        type: CHANGE_SEARCH_VALUE,
+        searchValue,
     };
 };
 
@@ -132,14 +165,19 @@ export function editSelectedRows(editType) {
         dispatch(startLoading());
         iaxios.put('appointment-list/edit/', {editType: editType, idList: [...selectedIdSet]})
             .then(response => {
-                console.log(response);
                 dispatch(clearIdSet());
                 dispatch(loadData());
             })
             .catch(error => {
-                console.log(error.response);
                 dispatch(stopLoading());
             });
     }
 }
 
+export function search(searchValue) {
+    return dispatch => {
+        dispatch(startLoading());
+        dispatch(changeSearchValue(searchValue));
+        dispatch(loadData());
+    }
+};

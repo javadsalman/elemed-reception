@@ -1,10 +1,11 @@
 import Modal from "../../UI/Modal/Modal";
 import classes from './InfoModal.module.scss';
-import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useMemo, useState, useCallback, useEffect, memo } from 'react';
 import ContentSpinner from './../../UI/Spinners/ContentSpinner/ContentSpinner';
 import iaxios from './../../../iaxios';
 import { makeSeen } from "../../../store/actions/appointmentActions";
 import { connect } from 'react-redux';
+import { deleteInfo } from './../../../store/actions/appointmentActions';
 
 
 const keyEq = {
@@ -78,11 +79,13 @@ function InfoModal(props) {
                 setDeleteAlert('Məlumatı silmək istədiyinizə əminsizmi?');
                 break;
             case 'deleteAccepted':
+                props.history.push("/dashboard")
+                props.onDeleteInfo(props.match.params.id);
                 break;
             default:
                 break;
         }
-    }, [])
+    }, [props])
 
     useEffect(() => {
         setLoading(true);
@@ -95,7 +98,7 @@ function InfoModal(props) {
         // .catch(error => {
         //     setLoading(false);
         // });
-    }, [props.match.params.id])
+    }, [props])
 
     const closeHandler = useCallback(() => {
         props.history.push("/dashboard")
@@ -115,7 +118,8 @@ function InfoModal(props) {
 function mapDispatchToProps(dispatch) {
     return {
         onMakeSeen: (id) => dispatch(makeSeen(id)),
+        onDeleteInfo: (id) => dispatch(deleteInfo(id)),
     };
 }
 
-export default connect(null, mapDispatchToProps)(InfoModal);
+export default connect(null, mapDispatchToProps)(memo(InfoModal));

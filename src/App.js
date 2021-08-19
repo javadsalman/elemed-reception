@@ -6,6 +6,7 @@ import { useMemo, Fragment, useEffect } from 'react';
 import Dashboard from './containers/Dashboard/Dashboard';
 import { connect } from 'react-redux';
 import { checkAuth } from './store/actions/authActions';
+import { loadData } from './store/actions/appointmentActions';
 
 function App(props) {
 
@@ -42,7 +43,12 @@ function App(props) {
 
     useEffect(() => {
         props.onCheckAuth();
-    }, []);
+        if (props.token) {
+            setInterval(() => {
+                props.onLoadData();
+            }, 1000 * 60 * 5);
+        }
+    }, [props]);
 
     return (
         <Layout>
@@ -62,7 +68,15 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         onCheckAuth: () => dispatch(checkAuth()),
+        onLoadData: () => dispatch(loadData()),
     }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+/* 
+mueyyen muddetden bir loading x
+withErrorHandler x
+token vaxti kecmeyi yoxlamaq x
+withMemo
+*/

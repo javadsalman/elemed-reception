@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { memo, useCallback } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -10,22 +10,9 @@ import { Checkbox } from '@material-ui/core';
 import classes from './Table.module.scss';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { toggleSelectAll, toggleSelectId } from './../../store/actions/appointmentActions';
+import { toggleSelectId } from './../../store/actions/appointmentActions';
 
 
-
-// function createData(name, calories, fat, carbs, protein) {
-//     return { name, calories, fat, carbs, protein };
-// }
-
-// const rows = [
-//     createData('Fazil Həsənli', 'Kasmetologiya', 'Tale Söylemezo', '0918454356', '08.08.2021'),
-//     createData('Aydan Yılmaz', '-', 'Defne Əliveva', '0917354356', '-'),
-//     createData('Nihad Əmirli', 'Kardiologiya', 'Defne Əliveva', '0912344356', '12.08.2021'),
-//     createData('Fəhmin Ələkbərli', '-', 'Mustafa Əliyev', '0918458766', '09.08.2021'),
-//     createData('Hilal Əliyevə', 'Cərrahiyyə', '-', '0918409856', '22.08.2021'),
-//     createData('Həsən Şamilli', 'Stomotologiya', 'Rəşad Aras', '0913544356', '25.08.2021'),
-// ];
 
 function BasicTable(props) {
     const history = useHistory(null);
@@ -37,9 +24,8 @@ function BasicTable(props) {
         else {
             history.push(`/dashboard/${id}`);
         }
-    }, [history, props.onToggleSelectId, props.selectMode]);
+    }, [history, props]);
 
-    // console.log('indexi burada bele tapdim', props.infoList.findIndex(info=>info.id===21))
     return (
         <TableContainer component={Paper}>
             <Table aria-label="simple table">
@@ -117,4 +103,4 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BasicTable);
+export default connect(mapStateToProps, mapDispatchToProps)(memo(BasicTable));

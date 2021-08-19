@@ -2,7 +2,7 @@ import { Button } from '@material-ui/core';
 import classes from './SelectOptions.module.scss';
 import { selectToggle, toggleSelectAll, editSelectedRows } from './../../../store/actions/appointmentActions';
 import { connect } from 'react-redux';
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 import Modal from '../../../components/UI/Modal/Modal';
 
 const alertTypeEq = {
@@ -40,7 +40,7 @@ function SelectOptions(props) {
                     <p style={{fontSize: 22}}>Seçilmiş məlumatların <b>{alertTypeEq[selectedProcess]}</b> razısızmı?</p>
             </Modal>
         }
-    }, [selectedProcess, props.isEmpty, modalDispatchHandler]);
+    }, [selectedProcess, modalDispatchHandler]);
 
     return (
         <div className={classes.Container}>
@@ -109,4 +109,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SelectOptions);
+export default connect(mapStateToProps, mapDispatchToProps)(memo(SelectOptions));

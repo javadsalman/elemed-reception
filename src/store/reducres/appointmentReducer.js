@@ -12,7 +12,8 @@ import {
     MAKE_SEEN,
     TOGGLE_SELECT_ID,
     TOGGLE_SELECT_ALL,
-    CLEAR_ID_SET
+    CLEAR_ID_SET,
+    CHANGE_SEARCH_VALUE
 } from './../actions/actionTypes';
 
 const initialState = {
@@ -47,6 +48,9 @@ const changePage = (state, action) => {
 const changeSearchType = (state, action) => {
     return {...state, searchType: action.searchType};
 };
+const changeSearchValue = (state, action) => {
+    return {...state, searchValue: action.searchValue};
+};
 const loadData = (state, action) => {
     return {...state, ...action.loadedData, loading: false};
 };
@@ -65,7 +69,7 @@ const clearError = (state) => {
 const makeSeen = (state, action) => {
     const infoIndex = state.infoList.findIndex(info=>info.id === action.id);
     if (state.infoList[infoIndex].seen === false) {
-        const newInfo = {...state.infoList[infoIndex], seen: true}
+        const newInfo = {...state.infoList[infoIndex], seen: true};
         const newInfoList = state.infoList.map((el, index) => {
             if (index === infoIndex) {
                 return newInfo;
@@ -77,12 +81,12 @@ const makeSeen = (state, action) => {
         const newSeenInfo = {
             all: state.seenInfo.all,
             seen: state.seenInfo.seen + 1,
-            unseen: state.seenInfo.unseen -1,
-        }
+            unseen: state.seenInfo.unseen - 1,
+        };
         return {...state, infoList: newInfoList, seenInfo: newSeenInfo};
     }
     return state;
-}
+};
 const toggleSelectId = (state, action) => {
     const newIdSet = new Set(state.selectedIdSet);
     if (state.selectedIdSet.has(action.id)) {
@@ -93,8 +97,7 @@ const toggleSelectId = (state, action) => {
         newIdSet.add(action.id);
         return {...state, selectedIdSet: newIdSet};
     }
-}
-
+};
 const toggleSelectAll = (state) => {
     const pageIdList = state.infoList.map(info => info.id);
     const newIdSet = new Set(state.selectedIdSet);
@@ -104,13 +107,13 @@ const toggleSelectAll = (state) => {
     }
     else {
         pageIdList.forEach(id => newIdSet.delete(id))
-        return {...state, selectedIdSet: newIdSet}
+        return {...state, selectedIdSet: newIdSet};
     }
-}
-
+};
 const clearIdSet = (state) => {
-    return {...state, selectedIdSet: new Set()}
-}
+    return {...state, selectedIdSet: new Set()};
+};
+
 
 function AppointmentReducer(state = initialState, action) {
     switch (action.type) {
@@ -118,6 +121,7 @@ function AppointmentReducer(state = initialState, action) {
         case CHANGE_SEEN: return changeSeenType(state, action);
         case CHANGE_PAGE: return changePage(state, action);
         case CHANGE_SEARCH_TYPE: return changeSearchType(state, action);
+        case CHANGE_SEARCH_VALUE: return changeSearchValue(state, action);
         case LOAD_DATA: return loadData(state, action);
         case START_LOADING: return startLoading(state);
         case STOP_LOADING: return stopLoading(state);

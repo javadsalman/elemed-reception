@@ -5,23 +5,31 @@ import Modal from '../../components/UI/Modal/Modal';
 function withErrorHandler(WrappedComponent, instance) {
 
     return (props) => {
-        const [error, setError] = useState(null);
+    const [error, setError] = useState(null);
 
         const reqInterceptor = useMemo(() => {
             return instance.interceptors.request.use(req => {
                 // setError(null);
                 return req;
             }, error => {
-                setError(error);
+                setError(error.message)
                 return Promise.reject(error);
             });
         }, []);
 
         const resInterceptor = useMemo(() => {
-            return instance.interceptors.response.use(req => {
-                return req
+            return instance.interceptors.response.use(res => {
+                return res
             }, error => {
-                setError(error);
+                if (error.response.status === 401) {
+                    setError('Giriş müddəti başa çatdı. Davam etmək üçün çıxış edib, yenidən daxil olun!')
+                }
+                else if (error.response.status === 404) {
+                    setError(null);
+                }
+                else {
+                    setError(error.message);
+                }
                 return Promise.reject(error);
             });
         }, []);
@@ -40,11 +48,11 @@ function withErrorHandler(WrappedComponent, instance) {
                     error
                     &&
                     <Modal
-                        title="Xəta Bildirişi"
+                        title="Bildiriş"
                         dispatch={() => { }}
                         onClose={() => setError(null)}
                         buttons={[]}>
-                        <p>{error.message}</p>
+                        <p>{error}</p>
                     </Modal>
                 }
                 <WrappedComponent {...props} />
@@ -52,5 +60,6 @@ function withErrorHandler(WrappedComponent, instance) {
         )
     }
 }
+
 
 export default withErrorHandler;

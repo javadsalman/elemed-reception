@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useState } from 'react';
+import React, { Fragment, useCallback, useState, memo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -31,7 +31,7 @@ function ButtonAppBar(props) {
             props.onLogout();
             setOpenModal(false);
         }
-    }, [props.onLogout]);
+    }, [props]);
 
     return (
         <div className={classes.root}>
@@ -101,4 +101,4 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ButtonAppBar);
+export default connect(mapStateToProps, mapDispatchToProps)(memo(ButtonAppBar));

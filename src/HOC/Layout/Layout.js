@@ -4,7 +4,6 @@ import ButtonAppBar from './../../components/Navigation/AppBar/AppBar';
 import classes from './Layout.module.scss'
 
 function Layout(props) {
-
     return (
         <Fragment>
             <header className={classes.Header}>

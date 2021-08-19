@@ -10,17 +10,18 @@ export function login(username, password) {
             password: password
         })
         .then(response => {
-            console.log('response', response)
             localStorage.setItem('token', response.data.token)
             iaxios.defaults.headers.common['Authorization'] = `Token ${response.data.token}`
             dispatch({type: AUTH_SUCCESS, token: response.data.token});
         })
         .catch(error => {
             let errorMessage;
-            console.log(error.response)
             switch(error.response.status) {
                 case 400:
                     errorMessage = 'İstifadəçi adı və ya şifrə yanlışdır!';
+                    break;
+                case 429:
+                    errorMessage = 'Daxil olma limitini keçmisiz. Yenidən sınamaq üçün 1 saat gözləyin!';
                     break;
                 default:
                     errorMessage = `Bilinməyən bir xəta baş verdi! Xəta Kodu: ${error.response.status}`;

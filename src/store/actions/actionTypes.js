@@ -12,6 +12,7 @@ export const STOP_LOADING = 'STOP_LOADING';
 export const CHANGE_SEEN = 'CHANGE_SEEN';
 export const CHANGE_PAGE = 'CHANGE_PAGE';
 export const CHANGE_SEARCH_TYPE = 'CHANGE_SEARCH_TYPE';
+export const CHANGE_SEARCH_VALUE = 'CHANGE_SEARCH_VALUE';
 export const LOAD_DATA = 'LOAD_DATA';
 export const MAKE_SEEN = 'MAKE_SEEN';
 export const TOGGLE_SELECT_ID = 'TOGGLE_SELECT_ID';

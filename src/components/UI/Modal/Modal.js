@@ -1,10 +1,9 @@
 import classes from './Modal.module.scss';
 import Backdrop from '../Backdrop/Backdrop';
 import { Button } from '@material-ui/core';
-import { Fragment, forwardRef } from 'react';
+import { Fragment, forwardRef, memo } from 'react';
 
 function Modal (props, ref) {
-
 	const  modal = (
 		<Fragment>
 			<Backdrop click={props.onClose} />
@@ -50,4 +49,4 @@ function Modal (props, ref) {
 	return modal;
 }
 
-export default forwardRef(Modal);
+export default memo(forwardRef(Modal));

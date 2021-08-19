@@ -1,11 +1,9 @@
 import { Button, TextField } from '@material-ui/core';
 import classes from './Login.module.scss';
 import PageSpinner from './../../../components/UI/Spinners/PageSpinner/PageSpinner';
-import { Fragment, useState, useCallback, useEffect } from 'react';
-import { checkAuth, login, removeError } from './../../../store/actions/authActions';
+import { Fragment, useState, useCallback, memo } from 'react';
+import { login, removeError } from './../../../store/actions/authActions';
 import { connect } from 'react-redux';
-// import withErrorHandler from './../../../HOC/withErrorHandler/withErrorhandler';
-// import iaxios from './../../../iaxios';
 import Modal from '../../../components/UI/Modal/Modal';
 
 function Login(props) {
@@ -85,4 +83,4 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(memo(Login));
