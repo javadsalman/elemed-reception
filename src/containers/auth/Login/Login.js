@@ -14,6 +14,12 @@ function Login(props) {
         props.onLogin(username, password);
     }, [username, password, props])
 
+    const keyPressHandler = useCallback((event) => {
+        if (event.key === 'Enter') {
+            submitHandler();
+        }
+    }, [submitHandler])
+
     return (
         <Fragment>
             {
@@ -41,6 +47,7 @@ function Login(props) {
                             placeholder="İstifadəçi Adı"
                             value={username}
                             onChange={event => setUsername(event.target.value)}
+                            onKeyUp={keyPressHandler}
                             type="text" />
                     </div>
                     <div className={classes.TextFieldDiv}>
@@ -51,6 +58,7 @@ function Login(props) {
                             placeholder="Şifrə"
                             value={password}
                             onChange={event => setPassword(event.target.value)}
+                            onKeyUp={keyPressHandler}
                             type="password" />
                     </div>
                     <div>

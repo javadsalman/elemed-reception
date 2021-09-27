@@ -101,7 +101,8 @@ const toggleSelectId = (state, action) => {
 const toggleSelectAll = (state) => {
     const pageIdList = state.infoList.map(info => info.id);
     const newIdSet = new Set(state.selectedIdSet);
-    if (state.selectedIdSet.size < 6) {
+    const difference = pageIdList.filter(e => !newIdSet.has(e))
+    if (difference.length) {
         pageIdList.forEach(id => newIdSet.add(id))
         return {...state, selectedIdSet: newIdSet};
     }
